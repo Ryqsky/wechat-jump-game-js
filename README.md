@@ -20,6 +20,9 @@ npm start
 6. 在CMD等bash命令窗口下运行 npm i && npm start 启动程序（该窗口可以看错误日志）
 7. Chrome浏览器打开 localhost:9000，按F12打开devtools查看跳一跳日志
 
+## 其他
+1. 如果有发现每次都差一点点才跳到中心点的话，可以微调utils.js下的BOOM系数
+
 ## 原理
 **只支持安卓**
 
