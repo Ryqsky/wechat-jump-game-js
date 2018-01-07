@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const fs = require('fs');
 const util = require('util');
 const fsReaddirPromise = util.promisify(fs.readdir);
+const opn = require('opn');
 
 const app = express();
 
@@ -65,4 +66,5 @@ const port = process.env.PORT || '9000';
 const server = app.listen(port);
 server.on('listening', _ => {
   console.log(`Listening on http://localhost:${port}`);
+  opn(`http://localhost:${port}`);
 })
