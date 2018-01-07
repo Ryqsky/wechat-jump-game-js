@@ -73,7 +73,8 @@ function run () {
     .then(jump)
     .then(function () {
       if (window.runStatus) {
-        setTimeout(run, 1e3);
+        // 反作弊 增加随机时间
+        setTimeout(run, Math.random() * 5000);
       }
     })
     .catch((e) => {
