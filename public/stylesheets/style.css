@@ -1,0 +1,81 @@
+body {
+    margin: 0;
+    padding: 0;
+    font: 14px 'Lucida Grande', Helvetica, Arial, sans-serif;
+    text-align: center;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    color: #00b7ff;
+}
+
+#list li {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+li img {
+    width: 720px;
+}
+
+.point {
+    background: red;
+    width: 10px;
+    height: 10px;
+    position: absolute;
+    z-index: 999;
+    border-radius: 50%;
+}
+
+#canvas {
+    max-width: 100%;
+}
+
+#canvas canvas {
+    max-width: 100%;
+}
+
+.btn-row {
+    width: 200px;
+    margin: 20px auto;
+    display: flex;
+    justify-content: space-around;
+}
+
+.btn {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    line-height: 50px;
+    text-align: center;
+    border: 1px solid #00b7ff;
+    color: #00b7ff;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.btn.active {
+    background: #00b7ff;
+    color: #fff;
+}
+
+/** test **/
+.test-list {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.test-list li {
+    flex: 1;
+    list-style: none;
+    margin-right: 8px;
+}
+.tips {
+    margin: 8px;
+}
