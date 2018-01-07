@@ -12,6 +12,6 @@ yarn-error.log*
 *.ntvs*
 *.njsproj
 *.sln
-/public/images/history
-/public/images/jump_screencap
+/public/images/history/
+/public/images/jump_screencap/
 package-lock.json

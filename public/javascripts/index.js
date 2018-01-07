@@ -74,7 +74,7 @@ function run () {
     .then(function () {
       if (window.runStatus) {
         // 反作弊 增加随机时间
-        setTimeout(run, 1000 + Math.random() * 4000);
+        setTimeout(run, 1500 + Math.random() * 4000);
       }
     })
     .catch((e) => {

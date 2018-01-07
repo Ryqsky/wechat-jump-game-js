@@ -5,6 +5,8 @@ const util = require('util');
 const fs = require('fs');
 const path = require('path');
 const exec = util.promisify(require('child_process').exec);
+const fsCopyFile = util.promisify(fs.copyFile);
+const fsMkdir = util.promisify(fs.mkdir);
 
 const ADB_PATH = 'D:/adb/adb';
 const SCREENCAP_REMOTE_PATH = '/sdcard/screencap.png';
@@ -43,14 +45,20 @@ pullScreenCap = async () => {
 };
 
 copyImg = async () => {
-  return new Promise(resolve => {
+  // 先创建目录
+  try {
+    await fsMkdir(path.resolve(__dirname, './public/images/history'));
+  } catch (e) {
+    // e
+  }
+  // 再复制文件
+  try {
     const now = new Date();
     const fileName = `${now.getHours()}${now.getMinutes()}${now.getSeconds()}`;
-    fs.copyFile(`${SCREENCAP_PATH}/screencap.png`, `${path.resolve('.', 'public/images/history')}/${fileName}.png`, (err) => {
-      if (err) console.log(err);
-      resolve();
-    });
-  })
+    await fsCopyFile(`${SCREENCAP_PATH}/screencap.png`, `${path.resolve(__dirname, './public/images/history')}/${fileName}.png`);
+  } catch (e) {
+    console.log(e);
+  }
 };
 
 jumpByDistance = async (distance) => {
