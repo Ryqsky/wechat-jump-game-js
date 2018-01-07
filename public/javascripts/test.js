@@ -1,11 +1,11 @@
-// const testUrl = '/images/demos/hd1.jpg';
 let testUrl = '/images/demos/171124.png';
-let id = getQueryStringByName('id');
-if (id) {
-  testUrl = `/images/demos/${id}.png`
+const fileName = getQueryStringByName('fileName');
+if (fileName) {
+  testUrl = `/images/demos/${fileName}`
 }
 const canvas = document.createElement('canvas');
 
+// 获取queryString参数
 function getQueryStringByName (name) {
   let result = location.search.match(new RegExp("[\?\&]" + name + "=([^\&]+)", "i"));
   if (result == null || result.length < 1) {
@@ -14,6 +14,7 @@ function getQueryStringByName (name) {
   return result[1];
 }
 
+// 识别该图像
 function recognitionByUrl (testUrl) {
   getPosition(testUrl).then(({pos1, pos2, data, width, height}) => {
     canvas.width = width;
@@ -41,8 +42,7 @@ function recognitionByUrl (testUrl) {
   });
 }
 
-recognitionByUrl(testUrl);
-
+// 是否在附近
 function near (i, start, end, t) {
   if ((i > start - t && i < start + t) || (i > end - t && i < end + t)) {
     return true;
@@ -72,5 +72,7 @@ function getTestList () {
     });
   });
 }
+
 getTestList();
+recognitionByUrl(testUrl);
 

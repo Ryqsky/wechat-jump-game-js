@@ -53,21 +53,17 @@ copyImg = async () => {
   })
 };
 
-iJump = async (distance) => {
-  await jumpGo(parseInt(distance * BOOM));
-  await setTimeout(async () => {
-    await fetchScreenCap();
-    await pullScreenCap();
-    await copyImg();
-  }, 1500);
+jumpByDistance = async (distance) => {
+  await jumpGo(Math.floor(distance * BOOM));
 };
 
-refreshScreencap = async () => {
+refreshScreenCap = async () => {
   await fetchScreenCap();
   await pullScreenCap();
+  await copyImg();
 };
 
 module.exports = {
-  iJump,
-  refreshScreencap
+  jumpByDistance,
+  refreshScreenCap
 };

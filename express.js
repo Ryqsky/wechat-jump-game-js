@@ -3,7 +3,7 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const fs = require('fs');
 const util = require('util');
-const fsReaddirPromise = util.promisify(fs.readdir);
+const fsReadDirPromise = util.promisify(fs.readdir);
 const opn = require('opn');
 
 const app = express();
@@ -21,27 +21,25 @@ app.use(function (err, req, res, next) {
 
 
 // 跳一跳接口
-const router = express.Router();
 const utils = require('./utils.js');
-router.post('/', async function (req, res, next) {
+app.post('/jumpByDistance', async function(req, res, next) {
   try {
-    await utils.iJump(req.body.distance);
+    await utils.jumpByDistance(req.body.distance);
     res.json({error: 0});
   } catch (e) {
     res.json({error: 1});
   }
-});
-router.post('/getscreencap', async function (req, res, next) {
+})
+app.post('/refreshScreenCap', async function(req, res, next) {
   try {
-    await utils.refreshScreencap();
+    await utils.refreshScreenCap();
     res.json({error: 0});
   } catch (e) {
     res.json({error: 1});
   }
-});
-app.use('/jumponejump', router);
-app.use('/getTestList', async function (req, res, next) {
-  const files = await fsReaddirPromise('./public/images/demos');
+})
+app.get('/getTestList', async function (req, res, next) {
+  const files = await fsReadDirPromise('./public/images/demos');
   res.json({files});
 })
 
@@ -60,6 +58,7 @@ app.use(function (err, req, res, next) {
   res.status(err.status || 500);
   res.send('error');
 });
+
 
 // 启动
 const port = process.env.PORT || '9000';

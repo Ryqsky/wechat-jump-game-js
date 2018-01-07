@@ -1,3 +1,4 @@
+// 获取图像数据
 function getImageData (src) {
   const img = new Image();
   return new Promise((resolve, reject) => {
@@ -21,10 +22,12 @@ function getImageData (src) {
   });
 }
 
-function tolerenceHelper (r, g, b, rt, gt, bt, t) {
+// 公差助手函数
+function toleranceHelper (r, g, b, rt, gt, bt, t) {
   return r > rt - t && r < rt + t && g > gt - t && g < gt + t && b > bt - t && b < bt + t;
 }
 
+// 获取下一个中心点
 function getNextCenter (data, width, height, y = -1) {
   let startY = Math.floor(height / 4);
   let endY = Math.floor(height * 3 / 4);
@@ -38,50 +41,48 @@ function getNextCenter (data, width, height, y = -1) {
   let pos = [0, 0];
   // 保证从当前小人位置底部点往上
   endY = Math.min(endY, y);
-  let endX = width;
   for (let y = startY; y < endY; y++) {
-    for (let x = 1; x < endX; x++) {
+    for (let x = 1; x < width; x++) {
       let i = y * (width * 4) + x * 4;
       let rt = data[i];
       let gt = data[i + 1];
       let bt = data[i + 2];
       // 不是默认背景颜色 同时不是小人颜色（已经被遮挡）
-      if (!tolerenceHelper(rt, gt, bt, r, g, b, 30) && !tolerenceHelper(rt, gt, bt, 0, 255, 0, 1)) {
-        //找出顶点
+      if (!toleranceHelper(rt, gt, bt, r, g, b, 30) && !toleranceHelper(rt, gt, bt, 0, 255, 0, 1)) {
+        // 找出顶点
         const targetIndex = (y + 3) * (width * 4) + x * 4;
         const targetR = data[targetIndex];
         const targetG = data[targetIndex + 1];
         const targetB = data[targetIndex + 2];
-        console.log(targetR, targetG, targetB);
         let tolerance = 10; // 公差
         let breakWhenRGB = null; // 遇到RGB则退出
         let endY = y + width * (1 / 4);
         let isSingleRecognition = true;
         // 特殊处理
-        if (tolerenceHelper(targetR, targetG, targetB, 113, 113, 113, 1)) {
+        if (toleranceHelper(targetR, targetG, targetB, 113, 113, 113, 1)) {
           // 如果是灰色块，则调小公差
           tolerance = 8
         }
-        if (tolerenceHelper(targetR, targetG, targetB, 255, 238, 97, 1)) {
+        if (toleranceHelper(targetR, targetG, targetB, 255, 238, 97, 1)) {
           // 如果是黄色块，则调小结束高度
           tolerance = 1;
-          endY =  y + width * (1 / 5)
+          endY = y + width * (1 / 5)
         }
-        if (tolerenceHelper(targetR, targetG, targetB, 167, 160, 153, 10)) {
+        if (toleranceHelper(targetR, targetG, targetB, 167, 160, 153, 10)) {
           // 如果是唱片，取消单个识别
           tolerance = 1;
           isSingleRecognition = false;
-          endY =  y + width * (1 / 5);
+          endY = y + width * (1 / 5);
         }
-        if (tolerenceHelper(targetR, targetG, targetB, 224, 190, 155, 5)) {
+        if (toleranceHelper(targetR, targetG, targetB, 224, 190, 155, 5)) {
           // 如果是树凳
-          endY =  y + width * (1 / 5.3);
+          endY = y + width * (1 / 5.3);
         }
-        if (tolerenceHelper(targetR, targetG, targetB, 240, 240, 240, 1)) {
+        if (toleranceHelper(targetR, targetG, targetB, 240, 240, 240, 1)) {
           // 如果是士多
-          endY =  y + width * (1 / 5);
+          endY = y + width * (1 / 5);
         }
-        if (tolerenceHelper(targetR, targetG, targetB, 255, 255, 255, 1)) {
+        if (toleranceHelper(targetR, targetG, targetB, 255, 255, 255, 1)) {
           // 如果是白色块，可能是纸巾
           tolerance = 1;
           breakWhenRGB = {
@@ -126,6 +127,7 @@ function getNextCenter (data, width, height, y = -1) {
   return pos;
 }
 
+// 根据目标的RGB，获取其位置
 function getPositionByRGB (options) {
   const targetRGB = options.targetRGB || {
     r: 0,
@@ -160,12 +162,12 @@ function getPositionByRGB (options) {
       let r = imageData[i];
       let g = imageData[i + 1];
       let b = imageData[i + 2];
-      if (breakWhenRGB && Math.abs(x - Math.floor((startX + endX) / 2)) < 5 && tolerenceHelper(r, g, b, breakWhenRGB.r, breakWhenRGB.g, breakWhenRGB.b, breakWhenRGB.tolerance || tolerance)) {
+      if (breakWhenRGB && Math.abs(x - Math.floor((startX + endX) / 2)) < 5 && toleranceHelper(r, g, b, breakWhenRGB.r, breakWhenRGB.g, breakWhenRGB.b, breakWhenRGB.tolerance || tolerance)) {
         // 如果碰到背景色 就结束当前Y
         console.log('如果碰到背景色 就结束当前Y')
         endY = y;
       }
-      if (y > pos[1] && tolerenceHelper(r, g, b, targetRGB.r, targetRGB.g, targetRGB.b, tolerance)) {
+      if (y > pos[1] && toleranceHelper(r, g, b, targetRGB.r, targetRGB.g, targetRGB.b, tolerance)) {
         // 将匹配到的像素点设置为红色
         imageData[i] = 0;
         imageData[i + 1] = 255;
@@ -199,6 +201,7 @@ function getPositionByRGB (options) {
 async function getPosition (img) {
   let {data, width, height} = await getImageData(img);
   const imageData = data;
+
   // 小人现在的位置数据
   const curPosiData = getPositionByRGB({
     targetRGB: {
@@ -211,6 +214,7 @@ async function getPosition (img) {
     width,
   });
   let pos1 = [curPosiData.middleX, curPosiData.maxY];
+
   // 遮挡小人
   for (let x = curPosiData.minX - 50; x < curPosiData.maxX + 50; x++) {
     for (let y = curPosiData.minY - 50; y < curPosiData.maxY + 50; y++) {
@@ -220,6 +224,7 @@ async function getPosition (img) {
       imageData[i + 2] = 0;
     }
   }
+
   // 遮挡脚下
   const rhombusWidth = Math.floor(width / 4.3);
   let pointX;
@@ -242,7 +247,6 @@ async function getPosition (img) {
     }
   }
 
-  // let pos1 = [0, height];
   let pos2 = getNextCenter(imageData, width, height, pos1[1]);
   return {pos1, pos2, data: imageData, width, height};
 }

@@ -1,7 +1,7 @@
 function getScreenCap () {
   return new Promise((resolve, reject) => {
     $.ajax({
-      url: '/jumponejump/getscreencap',
+      url: '/refreshScreenCap',
       type: 'POST',
       dataType: 'json',
       data: {},
@@ -36,7 +36,7 @@ function jump ({pos1, pos2, width}) {
       return reject('超出宽度');
     }
     $.ajax({
-      url: '/jumponejump/',
+      url: '/jumpByDistance/',
       type: 'POST',
       dataType: 'json',
       data: {
@@ -74,7 +74,7 @@ function run () {
     .then(function () {
       if (window.runStatus) {
         // 反作弊 增加随机时间
-        setTimeout(run, Math.random() * 5000);
+        setTimeout(run, 1000 + Math.random() * 4000);
       }
     })
     .catch((e) => {
