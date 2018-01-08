@@ -17,6 +17,7 @@
 6. 在CMD等bash命令窗口下运行（该窗口可以看错误日志）
 ```bash
 git clone https://github.com/Ryqsky/wechat-jump-game-js.git
+cd wechat-jump-game-js
 npm i --registry=https://registry.npm.taobao.org
 npm start
 // open localhost:9000/test 查看识别效果
