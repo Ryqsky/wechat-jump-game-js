@@ -33,6 +33,12 @@ fetchScreenCap = async () => {
 };
 
 pullScreenCap = async () => {
+  // 先创建目录
+  try {
+    await fsMkdir(SCREENCAP_PATH);
+  } catch (e) {
+    // e
+  }
   try {
     const {stdout, stderr} = await exec(
       `${ADB_PATH} pull ${SCREENCAP_REMOTE_PATH} ${SCREENCAP_PATH}/screencap.png`,
